@@ -1,0 +1,7 @@
+name: SpigotApi
+version: '${project.version}'
+main: net.laffey.minigameapi.MiniGameApiPlugin
+api-version: '1.16'
+softdepend:
+  - Vault
+  - Citizens
