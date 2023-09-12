@@ -1,6 +1,6 @@
 package net.nekomine.spigot.tag;
 
-import net.nekomine.spigot.utility.functional.Updater;
+import net.nekomine.spigot.functional.Updater;
 
 public interface TagService {
 

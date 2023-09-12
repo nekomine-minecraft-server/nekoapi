@@ -1,7 +1,10 @@
 name: SpigotApi
 version: '${project.version}'
-main: net.laffey.minigameapi.MiniGameApiPlugin
+main: net.nekomine.spigot.SpigotApiPlugin
 api-version: '1.16'
+authors:
+  - Laffey
+  - imZontik
 softdepend:
   - Vault
   - Citizens

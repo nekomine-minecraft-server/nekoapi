@@ -2,7 +2,7 @@ package net.nekomine.spigot.tag;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.nekomine.spigot.utility.functional.Updater;
+import net.nekomine.spigot.functional.Updater;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;

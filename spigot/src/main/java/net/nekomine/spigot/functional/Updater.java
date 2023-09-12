@@ -1,4 +1,4 @@
-package net.nekomine.spigot.utility.functional;
+package net.nekomine.spigot.functional;
 
 @FunctionalInterface
 public interface Updater<T> {

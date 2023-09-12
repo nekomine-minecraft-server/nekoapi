@@ -1,14 +1,14 @@
 package net.nekomine.spigot.tag;
 
-import net.nekomine.spigot.Service;
-import net.nekomine.spigot.utility.functional.Updater;
+import net.nekomine.common.utility.Service;
+import net.nekomine.spigot.functional.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-public class TagServiceImpl extends Service implements TagService {
+public class TagServiceImpl implements TagService, Service {
     private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
     private final Plugin plugin;
     private TagListener tagListener;

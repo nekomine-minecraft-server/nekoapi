@@ -1,6 +1,5 @@
 package net.nekomine.spigot.state.waiting;
 
-import net.nekomine.spigot.state.StateService;
 import net.nekomine.spigot.board.BoardService;
 import net.nekomine.spigot.state.State;
 import org.bukkit.Bukkit;
@@ -13,7 +12,7 @@ public class WaitingState implements State {
     private final BoardService boardService;
     private final Location spawnLocation;
     private final int maxPlayers;
-    private WaitingBoardUpdater waitingBoardUpdater = new WaitingBoardUpdater();
+    private final WaitingBoardUpdater waitingBoardUpdater = new WaitingBoardUpdater();
     private PlayerListener playerListener;
 
     public WaitingState(Plugin plugin, BoardService boardService, Location spawnLocation, int maxPlayers) {
@@ -35,7 +34,4 @@ public class WaitingState implements State {
         HandlerList.unregisterAll(playerListener);
     }
 
-    public void setWaitingBoardUpdater(WaitingBoardUpdater waitingBoardUpdater) {
-        this.waitingBoardUpdater = waitingBoardUpdater;
-    }
 }

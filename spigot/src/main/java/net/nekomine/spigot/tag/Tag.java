@@ -1,8 +1,8 @@
 package net.nekomine.spigot.tag;
 
 import net.kyori.adventure.text.Component;
-import net.nekomine.spigot.utility.functional.Deleter;
-import net.nekomine.spigot.utility.functional.Sender;
+import net.nekomine.spigot.functional.Deleter;
+import net.nekomine.spigot.functional.Sender;
 
 public interface Tag extends Sender, Deleter {
 

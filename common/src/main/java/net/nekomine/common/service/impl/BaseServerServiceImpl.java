@@ -8,7 +8,7 @@ import org.redisson.api.RedissonClient;
 import java.util.Optional;
 
 public class BaseServerServiceImpl<Model extends BaseModel<Key>, Key> implements BaseServerService<Model, Key> {
-    private final RMap<Key, Model> roleMap;
+    protected final RMap<Key, Model> roleMap;
 
     public BaseServerServiceImpl(RedissonClient redissonClient, String mapName) {
         this.roleMap = redissonClient.getMap(mapName);

@@ -1,6 +1,6 @@
 package net.nekomine.spigot.board;
 
-import net.nekomine.spigot.utility.functional.Updater;
+import net.nekomine.spigot.functional.Updater;
 
 public interface BoardService {
     /**

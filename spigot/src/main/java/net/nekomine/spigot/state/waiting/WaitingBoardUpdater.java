@@ -2,7 +2,7 @@ package net.nekomine.spigot.state.waiting;
 
 import net.kyori.adventure.text.Component;
 import net.nekomine.spigot.board.Board;
-import net.nekomine.spigot.utility.functional.Updater;
+import net.nekomine.spigot.functional.Updater;
 
 import java.util.Map;
 

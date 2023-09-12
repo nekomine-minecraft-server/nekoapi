@@ -1,8 +1,8 @@
 package net.nekomine.spigot.board;
 
 import net.kyori.adventure.text.Component;
-import net.nekomine.spigot.Service;
-import net.nekomine.spigot.utility.functional.Updater;
+import net.nekomine.common.utility.Service;
+import net.nekomine.spigot.functional.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardServiceImpl extends Service implements BoardService {
+public class BoardServiceImpl implements BoardService, Service {
     private final Map<String, BaseBoard<Component>> playerScoreboards = new HashMap<>();
     private final Plugin plugin;
     private BoardListener boardListener;

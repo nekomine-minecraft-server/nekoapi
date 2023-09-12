@@ -1,0 +1,12 @@
+{
+  "id": "nekoapi",
+  "name": "NekoAPI",
+  "version": "1.0",
+  "description": "NekoMine api plugin",
+  "authors": [
+    "Laffey",
+    "imZontik"
+  ],
+  "dependencies": [],
+  "main": "net.nekomine.velocity.VelocityApiPlugin"
+}
