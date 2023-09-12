@@ -5,7 +5,7 @@ import org.redisson.api.RedissonClient;
 
 public class SpigotServerService extends BaseServerServiceImpl<SpigotServer, String> {
 
-    public SpigotServerService(RedissonClient redissonClient, String mapName) {
-        super(redissonClient, mapName);
+    public SpigotServerService(RedissonClient redissonClient) {
+        super(redissonClient, "SPIGOT_SERVER_MAP");
     }
 }

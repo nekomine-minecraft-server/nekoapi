@@ -3,6 +3,7 @@ package net.nekomine.spigot;
 import net.nekomine.common.model.SpigotServer;
 import net.nekomine.common.redis.impl.EnvRedisFactory;
 import net.nekomine.common.service.impl.SpigotServerService;
+import net.nekomine.common.service.impl.VelocityServerService;
 import net.nekomine.common.utility.Service;
 import net.nekomine.spigot.board.BoardService;
 import net.nekomine.spigot.board.BoardServiceImpl;
@@ -36,6 +37,7 @@ public final class SpigotApiPlugin extends JavaPlugin {
         TagServiceImpl tagService = new TagServiceImpl(this);
         NpcService npcService = new NpcServiceImpl(this);
         SpigotServerService spigotServerService = new SpigotServerServiceImpl(redissonClient, spigotServer, this);
+        VelocityServerService velocityServerService = new VelocityServerService(redissonClient);
 
         services.add(boardService);
         services.add(tagService);

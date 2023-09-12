@@ -16,7 +16,7 @@ public class VelocityServerServiceImpl extends VelocityServerService implements 
     private final ProxyServer proxyServer;
 
     public VelocityServerServiceImpl(RedissonClient redissonClient, VelocityApiPlugin velocityApiPlugin, VelocityServer VelocityServer, ProxyServer proxyServer) {
-        super(redissonClient, "VELOCITY_SERVER_MAP");
+        super(redissonClient);
         this.velocityApiPlugin = velocityApiPlugin;
         this.velocityServer = VelocityServer;
         this.proxyServer = proxyServer;

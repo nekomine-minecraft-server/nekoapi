@@ -13,7 +13,7 @@ public class SpigotServerServiceImpl extends SpigotServerService implements Serv
     private final Plugin plugin;
 
     public SpigotServerServiceImpl(RedissonClient redissonClient, SpigotServer spigotServer, Plugin plugin) {
-        super(redissonClient, "SPIGOT_SERVER_MAP");
+        super(redissonClient);
         this.spigotServer = spigotServer;
         this.plugin = plugin;
     }
