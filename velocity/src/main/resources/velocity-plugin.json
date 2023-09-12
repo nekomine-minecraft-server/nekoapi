@@ -1,7 +1,7 @@
 {
   "id": "nekoapi",
   "name": "NekoAPI",
-  "version": "1.0",
+  "version": "${project.version}",
   "description": "NekoMine api plugin",
   "authors": [
     "Laffey",
