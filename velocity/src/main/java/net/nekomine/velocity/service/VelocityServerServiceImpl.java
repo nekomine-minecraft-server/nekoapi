@@ -1,5 +1,6 @@
 package net.nekomine.velocity.service;
 
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import net.nekomine.common.model.VelocityServer;
@@ -38,7 +39,7 @@ public class VelocityServerServiceImpl extends VelocityServerService implements 
                     .buildTask(velocityApiPlugin, () -> {
                         velocityServer.setPlayers(proxyServer.getAllPlayers()
                                 .stream()
-                                .map(player -> player.getUsername().toLowerCase())
+                                .map(Player::getUsername)
                                 .toList());
                         roleMap.put(velocityServer.getKey(), velocityServer);
                     })

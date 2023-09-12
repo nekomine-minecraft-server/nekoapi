@@ -11,6 +11,7 @@ import net.nekomine.spigot.npc.NpcService;
 import net.nekomine.spigot.npc.NpcServiceImpl;
 import net.nekomine.spigot.service.SpigotServerServiceImpl;
 import net.nekomine.spigot.state.StateService;
+import net.nekomine.spigot.state.unknown.UnknownState;
 import net.nekomine.spigot.tag.TagServiceImpl;
 import net.nekomine.spigot.tag.TagService;
 import org.bukkit.Bukkit;
@@ -22,21 +23,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public final class SpigotApiPlugin extends JavaPlugin {
-    private final SpigotServer spigotServer = new SpigotServer(getSpigotName(),
-            new ArrayList<>(),
-            new ArrayList<>(),
-            Bukkit.getMaxPlayers(), 16, "world");
+    private final SpigotServer spigotServer = new SpigotServer();
 
     private final List<Service> services = new ArrayList<>();
 
     @Override
     public void onEnable() {
+        spigotServer.setName(getSpigotName());
+
         RedissonClient redissonClient = new EnvRedisFactory().create();
         BoardServiceImpl boardService = new BoardServiceImpl(this);
         TagServiceImpl tagService = new TagServiceImpl(this);
         NpcService npcService = new NpcServiceImpl(this);
-        SpigotServerService spigotServerService = new SpigotServerServiceImpl(redissonClient, spigotServer, this);
+        StateService stateService = new StateServiceImpl();
+        stateService.addState(new UnknownState());
+        SpigotServerService spigotServerService = new SpigotServerServiceImpl(redissonClient, stateService, spigotServer, this);
         VelocityServerService velocityServerService = new VelocityServerService(redissonClient);
 
         services.add(boardService);
@@ -47,11 +50,10 @@ public final class SpigotApiPlugin extends JavaPlugin {
         Bukkit.getServicesManager().register(NpcService.class, npcService, this, ServicePriority.Normal);
         Bukkit.getServicesManager().register(SpigotServer.class, spigotServer, this, ServicePriority.Normal);
         Bukkit.getServicesManager().register(SpigotServerService.class, spigotServerService, this, ServicePriority.Normal);
+        Bukkit.getServicesManager().register(VelocityServerService.class, velocityServerService, this, ServicePriority.Normal);
+        Bukkit.getServicesManager().register(StateService.class, stateService, this, ServicePriority.Normal);
 
         services.forEach(Service::enable);
-
-        StateService stateService = new StateServiceImpl();
-        Bukkit.getServicesManager().register(StateService.class, stateService, this, ServicePriority.Normal);
     }
 
     @Override

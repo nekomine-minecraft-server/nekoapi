@@ -14,10 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class SpigotServer implements Server {
     private String name;
-    private List<String> gamers;
-    private List<String> spectators;
-    private int maxPlayers;
-    private int maxGameSlots;
+    private List<String> gamers = new ArrayList<>();
+    private List<String> spectators = new ArrayList<>();
+    private int maxPlayers = 0;
+    private int maxGameSlots = 0;
+    boolean waitGamers = false;
+    boolean waitSpectators = false;
     private String map;
 
     @Override

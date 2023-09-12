@@ -11,6 +11,13 @@ import java.util.Queue;
 
 class StateServiceImpl implements StateService {
     private final Queue<State> stateQueue = new ArrayDeque<>();
+    private State currentState;
+
+
+    @Override
+    public State getCurrentState() {
+        return currentState;
+    }
 
     @Override
     public void addState(State... states) {
@@ -33,6 +40,7 @@ class StateServiceImpl implements StateService {
             throw new StateException("Новое состояние не найдено!");
         }
 
+        currentState = newState;
         newState.start();
     }
 

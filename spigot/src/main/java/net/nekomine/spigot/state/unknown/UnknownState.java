@@ -1,9 +1,8 @@
-package net.nekomine.spigot.state.end;
+package net.nekomine.spigot.state.unknown;
 
 import net.nekomine.spigot.state.State;
 
-public class EndState implements State {
-
+public class UnknownState implements State {
     @Override
     public void start() {
 
@@ -13,4 +12,5 @@ public class EndState implements State {
     public void end() {
 
     }
+
 }

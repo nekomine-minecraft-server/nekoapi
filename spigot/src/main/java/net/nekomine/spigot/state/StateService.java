@@ -3,6 +3,13 @@ package net.nekomine.spigot.state;
 public interface StateService {
 
     /**
+     * Получить текущее состояние
+     *
+     * @return текущее состояние
+     */
+    State getCurrentState();
+
+    /**
      * Добавить состояния в очередь
      *
      * @param states состояния
