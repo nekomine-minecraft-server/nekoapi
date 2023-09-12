@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class VelocityServerServiceImpl extends VelocityServerService implements Service {
     private final VelocityApiPlugin velocityApiPlugin;
-    private final VelocityServer VelocityServer;
+    private final VelocityServer velocityServer;
     private final ProxyServer proxyServer;
 
     public VelocityServerServiceImpl(RedissonClient redissonClient, VelocityApiPlugin velocityApiPlugin, VelocityServer VelocityServer, ProxyServer proxyServer) {
         super(redissonClient, "VELOCITY_SERVER_MAP");
         this.velocityApiPlugin = velocityApiPlugin;
-        this.VelocityServer = VelocityServer;
+        this.velocityServer = VelocityServer;
         this.proxyServer = proxyServer;
     }
 
@@ -35,7 +35,13 @@ public class VelocityServerServiceImpl extends VelocityServerService implements 
         if (!isEnabled()) {
             enabled = true;
             scheduledTask = proxyServer.getScheduler()
-                    .buildTask(velocityApiPlugin, () -> roleMap.put(VelocityServer.getKey(), VelocityServer))
+                    .buildTask(velocityApiPlugin, () -> {
+                        velocityServer.setPlayers(proxyServer.getAllPlayers()
+                                .stream()
+                                .map(player -> player.getUsername().toLowerCase())
+                                .toList());
+                        roleMap.put(velocityServer.getKey(), velocityServer);
+                    })
                     .repeat(20L, TimeUnit.SECONDS)
                     .schedule();
             return;
