@@ -40,7 +40,7 @@ public class SpigotServerServiceImpl extends SpigotServerService implements Serv
                     State currentState = stateService.getCurrentState();
 
                     spigotServer.setGamers(currentState.getGamers());
-                    spigotServer.setGamers(currentState.getSpectators());
+                    spigotServer.setSpectators(currentState.getSpectators());
                     spigotServer.setWaitGamers(currentState.waitGamers());
                     spigotServer.setWaitSpectators(currentState.waitSpectators());
                     spigotServer.setMap(currentState.getMapName());

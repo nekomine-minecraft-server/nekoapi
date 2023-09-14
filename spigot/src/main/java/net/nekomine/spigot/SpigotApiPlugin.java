@@ -6,10 +6,11 @@ import net.nekomine.common.service.impl.SpigotServerService;
 import net.nekomine.common.service.impl.VelocityServerService;
 import net.nekomine.common.utility.Service;
 import net.nekomine.spigot.board.BoardServiceImpl;
+import net.nekomine.spigot.command.CommandService;
+import net.nekomine.spigot.command.CommandServiceImpl;
+import net.nekomine.spigot.command.server.ServerStateCommandExecutor;
 import net.nekomine.spigot.gameuser.GameUser;
 import net.nekomine.spigot.gameuser.GameUserService;
-import net.nekomine.spigot.gameuser.GamerService;
-import net.nekomine.spigot.gameuser.SpectatorService;
 import net.nekomine.spigot.npc.NpcService;
 import net.nekomine.spigot.npc.NpcServiceImpl;
 import net.nekomine.spigot.service.SpigotServerServiceImpl;
@@ -22,37 +23,46 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.redisson.api.RedissonClient;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 @SuppressWarnings("unused")
 public final class SpigotApiPlugin extends JavaPlugin {
     private final SpigotServer spigotServer = new SpigotServer();
-    private final List<Service> services = new ArrayList<>();
+    private final Map<Class<?>, Service> services = new HashMap<>();
     private final Map<String, GameUser> gameUserMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     @Override
     public void onEnable() {
+        registerServices();
+    }
+
+    private void registerServices() {
         spigotServer.setName(getSpigotName());
 
         RedissonClient redissonClient = registerService(RedissonClient.class, new EnvRedisFactory().create());
         BoardServiceImpl boardService = registerService(BoardServiceImpl.class, new BoardServiceImpl(this));
         TagServiceImpl tagService = registerService(TagServiceImpl.class, new TagServiceImpl(this));
         NpcService npcService = registerService(NpcServiceImpl.class, new NpcServiceImpl(this));
+        CommandService commandService = registerService(CommandService.class, new CommandServiceImpl());
 
         StateService stateService = registerService(StateService.class, new StateServiceImpl());
         stateService.addState(new UnknownState());
+        stateService.nextState();
 
-        GameUserService gameUserService = new GameUserService(stateService, this, gameUserMap);
-        registerService(SpectatorService.class, gameUserService);
-        registerService(GamerService.class, gameUserService);
+        registerService(GameUserService.class, new GameUserService(stateService, this, gameUserMap));
 
         SpigotServerService spigotServerService = registerService(SpigotServerService.class, new SpigotServerServiceImpl(redissonClient, stateService, spigotServer, this));
         VelocityServerService velocityServerService = registerService(VelocityServerService.class, new VelocityServerService(redissonClient));
 
-        services.forEach(Service::enable);
+        services.values().forEach(Service::enable);
+
+        registerCommand(commandService);
+    }
+
+    private void registerCommand(CommandService commandService) {
+        commandService.registerCommand(commandService.createPlayerCommand(new ServerStateCommandExecutor(spigotServer)));
     }
 
     private <T> T registerService(Class<T> serviceClass, T t) {
@@ -62,7 +72,7 @@ public final class SpigotApiPlugin extends JavaPlugin {
     @SuppressWarnings("ignore all")
     private <T> T registerService(Class<T> serviceClass, T t, ServicePriority priority) {
         if (t instanceof Service service) {
-            services.add(service);
+            services.put(serviceClass, service);
         }
 
         Bukkit.getServicesManager().register(serviceClass, t, this, priority);
@@ -72,7 +82,7 @@ public final class SpigotApiPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        services.forEach(Service::disable);
+        services.values().forEach(Service::disable);
     }
 
     /**

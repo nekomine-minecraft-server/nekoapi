@@ -251,6 +251,10 @@ public class SpectatorListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
+        if (!isSpectator(player)) {
+            return;
+        }
+
         Spectator spectator = spectatorService.getSpectator(player.getName()).orElseThrow();
 
         if (event.getTo().getY() <= 0) {

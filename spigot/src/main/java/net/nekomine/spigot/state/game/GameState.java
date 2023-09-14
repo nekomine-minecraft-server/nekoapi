@@ -8,23 +8,14 @@ import net.nekomine.spigot.state.State;
 
 import java.util.List;
 
-public class GameState implements State {
+@SuppressWarnings("unused")
+public abstract class GameState implements State {
     protected final SpectatorService spectatorService;
     protected final GamerService gamerService;
 
     public GameState(SpectatorService spectatorService, GamerService gamerService) {
         this.spectatorService = spectatorService;
         this.gamerService = gamerService;
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void end() {
-
     }
 
     @Override

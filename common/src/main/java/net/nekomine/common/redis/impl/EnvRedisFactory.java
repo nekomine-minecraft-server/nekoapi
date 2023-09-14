@@ -10,11 +10,10 @@ public class EnvRedisFactory implements RedisFactory {
     @Override
     public RedissonClient create() {
         Config config = new Config();
-
         config.useSingleServer()
                 .setPassword(System.getenv("redis_password"))
-                .setUsername(System.getenv("redis_username"))
-                .setAddress(System.getenv("redis_node_address"));
+                .setUsername(System.getenv("redis_user"))
+                .setAddress(System.getenv("redis_host"));
 
         return Redisson.create(config);
     }
