@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jboss.marshalling.Pair;
 
@@ -21,6 +20,7 @@ public class SpectatorTasks extends BukkitRunnable {
         this.spectatorService = spectatorService;
     }
 
+    @SuppressWarnings("unused")
     public void findNearestTask(Player player) {
         if (player == null) {
             return;
@@ -75,6 +75,7 @@ public class SpectatorTasks extends BukkitRunnable {
         return -1;
     }
 
+    @SuppressWarnings("ignore all")
     private void addRunnable(String playerName, String key, Runnable runnable) {
         String name = playerName.toLowerCase();
         Map<String, Runnable> runnableMap = tasks.get(name);
@@ -94,6 +95,7 @@ public class SpectatorTasks extends BukkitRunnable {
         tasks.remove(player.getName().toLowerCase());
     }
 
+    @SuppressWarnings("unused")
     public void cancelTaskByKey(Player player, String key) {
         if (player == null) {
             return;

@@ -1,7 +1,6 @@
 package net.nekomine.spigot.tag;
 
 import net.nekomine.common.utility.BaseService;
-import net.nekomine.common.utility.Service;
 import net.nekomine.spigot.functional.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -14,8 +13,6 @@ public class TagServiceImpl extends BaseService implements TagService{
     private final Plugin plugin;
     private TagListener tagListener;
 
-    private boolean enabled = false;
-
     public TagServiceImpl(Plugin plugin) {
         this.plugin = plugin;
     }
@@ -23,11 +20,6 @@ public class TagServiceImpl extends BaseService implements TagService{
     @Override
     public Tag createTag(Updater<Tag> updater) {
         return new BukkitTag(scoreboard, updater);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 
     @Override

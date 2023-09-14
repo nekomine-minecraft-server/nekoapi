@@ -3,6 +3,10 @@ package net.nekomine.spigot.gameuser;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import net.kyori.adventure.text.Component;
+import net.nekomine.spigot.state.SpectatorState;
+import net.nekomine.spigot.state.State;
+import net.nekomine.spigot.state.StateService;
+import net.nekomine.spigot.utility.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,17 +29,17 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SpectatorListener implements Listener {
     private final SpectatorService spectatorService;
     private final SpectatorTasks spectatorTasks;
+    private final StateService stateService;
 
-    public SpectatorListener(SpectatorService spectatorService, SpectatorTasks spectatorTasks) {
+    public SpectatorListener(SpectatorService spectatorService, SpectatorTasks spectatorTasks, StateService stateService) {
         this.spectatorService = spectatorService;
         this.spectatorTasks = spectatorTasks;
+        this.stateService = stateService;
     }
 
     @EventHandler
@@ -55,7 +59,7 @@ public class SpectatorListener implements Listener {
         if (isSpectator(player) || !hasBlock(player)) {
             return;
         }
-        List<Player> spectators = getNearPlayers(player, 2);
+        List<Player> spectators = LocationUtil.getNearPlayers(player, 2);
         if (spectators.isEmpty()) {
             return;
         }
@@ -85,34 +89,11 @@ public class SpectatorListener implements Listener {
         return itemInMainHand.getType().isSolid();
     }
 
-    private List<Player> getNearPlayers(Player player, int radius) {
-        List<Entity> nearbyEntities = player.getNearbyEntities(radius, radius, radius);
-        if (nearbyEntities.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<Player> players = new ArrayList<>();
-        for (Entity nearbyEntity : nearbyEntities) {
-            if (nearbyEntity.getType() == EntityType.PLAYER) {
-                players.add((Player) nearbyEntity);
-            }
-        }
-        return Collections.unmodifiableList(players);
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onArmorStand(PlayerArmorStandManipulateEvent e) {
         if (isSpectator(e.getPlayer())) {
             e.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void onSpectatorJoin(final PlayerJoinEvent event) {
-        if (!isSpectator(event.getPlayer())) {
-            return;
-        }
-
-        //TODO: Создать борд
     }
 
     @EventHandler
@@ -224,18 +205,6 @@ public class SpectatorListener implements Listener {
         }
     }
 
-/*    @EventHandler
-    public void onCollision(EntityCollisionEvent e) {
-        Entity initiator = e.getInitiator();
-        if (initiator.getType() != EntityType.PLAYER) {
-            return;
-        }
-
-        if (isSpectator((Player) initiator)) {
-            e.setCancelled(true);
-        }
-    }*/
-
     private boolean isSpectator(Player player) {
         return spectatorService.isSpectator(player.getName());
     }
@@ -282,19 +251,19 @@ public class SpectatorListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (isSpectator(player)) {
-            return;
-        }
+        Spectator spectator = spectatorService.getSpectator(player.getName()).orElseThrow();
 
         if (event.getTo().getY() <= 0) {
-/*
-            player.teleport((Location) game.getSetting(GameSettings.LOBBY_LOCATION));
-*/
+            State state = stateService.getCurrentState();
+
+            if (state instanceof SpectatorState spectatorState) {
+                player.teleport(spectatorState.getSpectatorLocation());
+            }
         }
 
-/*        if (user.getSpectatorUser().getSettings(SpectatorSettings.ALWAYS_FLY)) {
+        if (spectator.isAlwaysFly()) {
             player.setFlying(true);
-        }*/
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -312,37 +281,6 @@ public class SpectatorListener implements Listener {
         }
     }
 
-/*    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onChat(AsyncGamerChatFormatEvent event) {
-        val gamer = event.getGamer();
-
-        // если игрок в ванише, то не надо ничего менять
-        // его сообщения все равно не должны быть видны
-        if (gamer.isVanished()) {
-            return;
-        }
-
-        val user = GameUserRegistry.getUser(event.getGamer().getName());
-
-        if (user != null && (user.isSpectator() || user.isTemporarySpectator())) {
-            event.removeRecipients();
-
-            for (val gameUser : GameUserRegistry.getUsers()) {
-                if (((gameUser.isSpectator() || gameUser.isTemporarySpectator()) && !gameUser.getSpectatorUser().getSettings(SpectatorSettings.HIDE_OTHER))
-                        || gameUser == user) {
-
-                    event.addRecipient(gameUser.getGamer());
-                }
-            }
-
-            val color = user.isTemporarySpectator() ? "§c" : "§4";
-
-            for (val recipient : event.getRecipients()) {
-                event.appendFormat(recipient, " §8[" + color + "✖§8] ");
-            }
-        }
-    }*/
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFish(PlayerFishEvent event) {
         if (isSpectator(event.getPlayer())) {
@@ -356,28 +294,6 @@ public class SpectatorListener implements Listener {
             event.setCancelled(true);
         }
     }
-
-/*    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInteract(PlayerInteractEntityEvent event) {
-        GameUser user = GameUserRegistry.getUser(event.getPlayer().getName());
-        boolean allowInventoryOpen = !game.getSetting(
-                GameSettings.DISABLE_OTHER_INVENTORY_OPEN_SPECTATOR, false);
-
-        if (user == null || user.isSpectator() || user.isTemporarySpectator()) {
-            if (event.getRightClicked().getType() == EntityType.PLAYER) {
-                Player target = ((Player) event.getRightClicked());
-
-                GameUser targetUser = GameUserRegistry.getUser(target.getName());
-
-                if (targetUser != null && !targetUser.isSpectator()
-                        && !targetUser.isTemporarySpectator() && allowInventoryOpen) {
-                    PlayerInventoryGui.openGui(user, target);
-                }
-            }
-
-            event.setCancelled(true);
-        }
-    }*/
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {

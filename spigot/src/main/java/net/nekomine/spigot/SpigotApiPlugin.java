@@ -7,6 +7,9 @@ import net.nekomine.common.service.impl.VelocityServerService;
 import net.nekomine.common.utility.Service;
 import net.nekomine.spigot.board.BoardServiceImpl;
 import net.nekomine.spigot.gameuser.GameUser;
+import net.nekomine.spigot.gameuser.GameUserService;
+import net.nekomine.spigot.gameuser.GamerService;
+import net.nekomine.spigot.gameuser.SpectatorService;
 import net.nekomine.spigot.npc.NpcService;
 import net.nekomine.spigot.npc.NpcServiceImpl;
 import net.nekomine.spigot.service.SpigotServerServiceImpl;
@@ -38,8 +41,14 @@ public final class SpigotApiPlugin extends JavaPlugin {
         BoardServiceImpl boardService = registerService(BoardServiceImpl.class, new BoardServiceImpl(this));
         TagServiceImpl tagService = registerService(TagServiceImpl.class, new TagServiceImpl(this));
         NpcService npcService = registerService(NpcServiceImpl.class, new NpcServiceImpl(this));
+
         StateService stateService = registerService(StateService.class, new StateServiceImpl());
         stateService.addState(new UnknownState());
+
+        GameUserService gameUserService = new GameUserService(stateService, this, gameUserMap);
+        registerService(SpectatorService.class, gameUserService);
+        registerService(GamerService.class, gameUserService);
+
         SpigotServerService spigotServerService = registerService(SpigotServerService.class, new SpigotServerServiceImpl(redissonClient, stateService, spigotServer, this));
         VelocityServerService velocityServerService = registerService(VelocityServerService.class, new VelocityServerService(redissonClient));
 

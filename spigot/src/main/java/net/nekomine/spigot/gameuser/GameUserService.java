@@ -6,11 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public class GamerServiceImpl extends BaseService implements GamerService, SpectatorService {
+public class GameUserService extends BaseService implements GamerService, SpectatorService {
     private final StateService stateService;
     private final Plugin plugin;
     private final Map<String, GameUser> gameUserMap;
@@ -18,7 +20,7 @@ public class GamerServiceImpl extends BaseService implements GamerService, Spect
     private GamerUserListener gamerUserListener;
     private SpectatorListener spectatorListener;
 
-    public GamerServiceImpl(StateService stateService, Plugin plugin, Map<String, GameUser> gameUserMap) {
+    public GameUserService(StateService stateService, Plugin plugin, Map<String, GameUser> gameUserMap) {
         this.stateService = stateService;
         this.plugin = plugin;
         this.gameUserMap = gameUserMap;
@@ -29,7 +31,7 @@ public class GamerServiceImpl extends BaseService implements GamerService, Spect
         super.enable();
 
         gamerUserListener = new GamerUserListener(this, stateService, gameUserMap);
-        spectatorListener = new SpectatorListener(this, spectatorTasks);
+        spectatorListener = new SpectatorListener(this, spectatorTasks, stateService);
 
         Bukkit.getPluginManager().registerEvents(gamerUserListener, plugin);
         Bukkit.getPluginManager().registerEvents(spectatorListener, plugin);
@@ -47,6 +49,21 @@ public class GamerServiceImpl extends BaseService implements GamerService, Spect
 
         spectatorTasks.clearAll();
         spectatorTasks.cancel();
+    }
+
+    @Override
+    public @Nullable Optional<Gamer> getGamer(@NotNull String playerName) {
+        GameUser gameUser = gameUserMap.get(playerName);
+
+        if (gameUser == null) {
+            return Optional.empty();
+        }
+
+        if (gameUser.getGamerState() != GameUser.GamerState.GAMER) {
+            return Optional.empty();
+        }
+
+        return Optional.of(gameUser);
     }
 
     @Override
@@ -91,6 +108,21 @@ public class GamerServiceImpl extends BaseService implements GamerService, Spect
         gameUserMap.get(playerName).setGamerState(GameUser.GamerState.GAMER);
 
         //todo: normalize player
+    }
+
+    @Override
+    public @Nullable Optional<Spectator> getSpectator(@NotNull String playerName) {
+        GameUser gameUser = gameUserMap.get(playerName);
+
+        if (gameUser == null) {
+            return Optional.empty();
+        }
+
+        if (gameUser.getGamerState() != GameUser.GamerState.SPECTATOR) {
+            return Optional.empty();
+        }
+
+        return Optional.of(gameUser);
     }
 
     @Override

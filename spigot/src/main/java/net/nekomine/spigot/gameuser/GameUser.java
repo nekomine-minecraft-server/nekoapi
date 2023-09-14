@@ -22,6 +22,11 @@ public class GameUser implements Gamer, Spectator {
     }
 
     @Override
+    public boolean isAlwaysFly() {
+        return true;
+    }
+
+    @Override
     public String getDisplayName() {
         return name;
     }

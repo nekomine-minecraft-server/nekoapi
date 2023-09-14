@@ -7,4 +7,6 @@ public interface Spectator {
     String getName();
 
     Player getPlayer();
+
+    boolean isAlwaysFly();
 }

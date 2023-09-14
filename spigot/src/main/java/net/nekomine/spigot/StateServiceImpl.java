@@ -1,6 +1,5 @@
 package net.nekomine.spigot;
 
-import net.nekomine.common.service.impl.BaseServerServiceImpl;
 import net.nekomine.common.utility.BaseService;
 import net.nekomine.spigot.state.State;
 import net.nekomine.spigot.state.StateService;

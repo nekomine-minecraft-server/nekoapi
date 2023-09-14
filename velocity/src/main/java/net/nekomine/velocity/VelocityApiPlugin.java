@@ -13,8 +13,8 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class VelocityApiPlugin {
@@ -24,6 +24,7 @@ public class VelocityApiPlugin {
     private final List<Service> services = new ArrayList<>();
 
     @Inject
+    @SuppressWarnings("unused")
     public VelocityApiPlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory, CommandManager commandManager) {
         redissonClient = new EnvRedisFactory().create();
         velocityServer = new VelocityServer(getProxyName(dataDirectory), new ArrayList<>(), server.getConfiguration().getShowMaxPlayers());
