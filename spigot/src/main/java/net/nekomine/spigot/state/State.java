@@ -43,7 +43,7 @@ public interface State {
      * Ждём ли состояние наблюдателей (если ждём, то наблюдатели могут заходить на сервер)
      */
     default boolean waitSpectators() {
-        return false;
+        return !waitGamers();
     }
 
     /**

@@ -1,9 +1,10 @@
 package net.nekomine.spigot.npc;
 
 import net.nekomine.common.record.Skin;
+import net.nekomine.common.utility.BaseService;
 import org.bukkit.plugin.Plugin;
 
-public class NpcServiceImpl implements NpcService {
+public class NpcServiceImpl extends BaseService implements NpcService {
     private final Plugin plugin;
 
     public NpcServiceImpl(Plugin plugin) {

@@ -46,7 +46,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @SuppressWarnings("unused")
 abstract class BaseBoard<T> {
-
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);
     protected static final String[] COLOR_CODES = Arrays.stream(ChatColor.values())
             .map(Object::toString)

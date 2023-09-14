@@ -1,5 +1,6 @@
 package net.nekomine.spigot.tag;
 
+import net.nekomine.common.utility.BaseService;
 import net.nekomine.common.utility.Service;
 import net.nekomine.spigot.functional.Updater;
 import org.bukkit.Bukkit;
@@ -8,7 +9,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-public class TagServiceImpl implements TagService, Service {
+public class TagServiceImpl extends BaseService implements TagService{
     private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
     private final Plugin plugin;
     private TagListener tagListener;
@@ -31,26 +32,17 @@ public class TagServiceImpl implements TagService, Service {
 
     @Override
     public void enable() {
-        if (!isEnabled()) {
-            enabled = true;
-            tagListener = new TagListener(scoreboard);
-            Bukkit.getPluginManager().registerEvents(new TagListener(scoreboard), plugin);
-            return;
-        }
+        super.enable();
 
-        throw new IllegalArgumentException("Сервис уже включён!");
+        tagListener = new TagListener(scoreboard);
+        Bukkit.getPluginManager().registerEvents(new TagListener(scoreboard), plugin);
     }
 
     @Override
     public void disable() {
-        if (isEnabled()) {
-            enabled = false;
-            scoreboard.getTeams().forEach(Team::unregister);
+        super.disable();
 
-            HandlerList.unregisterAll(tagListener);
-            return;
-        }
-
-        throw new IllegalArgumentException("Сервис уже выключен!");
+        scoreboard.getTeams().forEach(Team::unregister);
+        HandlerList.unregisterAll(tagListener);
     }
 }

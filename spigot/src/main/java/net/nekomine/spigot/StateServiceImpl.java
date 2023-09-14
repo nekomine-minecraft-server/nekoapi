@@ -1,6 +1,7 @@
 package net.nekomine.spigot;
 
-
+import net.nekomine.common.service.impl.BaseServerServiceImpl;
+import net.nekomine.common.utility.BaseService;
 import net.nekomine.spigot.state.State;
 import net.nekomine.spigot.state.StateService;
 import net.nekomine.spigot.state.exception.StateException;
@@ -9,10 +10,9 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
-class StateServiceImpl implements StateService {
+class StateServiceImpl extends BaseService implements StateService {
     private final Queue<State> stateQueue = new ArrayDeque<>();
     private State currentState;
-
 
     @Override
     public State getCurrentState() {
@@ -44,4 +44,9 @@ class StateServiceImpl implements StateService {
         newState.start();
     }
 
+    @Override
+    public void disable() {
+        currentState.end();
+        stateQueue.clear();
+    }
 }

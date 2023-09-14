@@ -1,6 +1,7 @@
 package net.nekomine.spigot.board;
 
 import net.kyori.adventure.text.Component;
+import net.nekomine.common.utility.BaseService;
 import net.nekomine.common.utility.Service;
 import net.nekomine.spigot.functional.Updater;
 import org.bukkit.Bukkit;
@@ -10,7 +11,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardServiceImpl implements BoardService, Service {
+public class BoardServiceImpl extends BaseService implements BoardService {
     private final Map<String, BaseBoard<Component>> playerScoreboards = new HashMap<>();
     private final Plugin plugin;
     private BoardListener boardListener;
@@ -32,29 +33,20 @@ public class BoardServiceImpl implements BoardService, Service {
 
     @Override
     public void enable() {
-        if (!isEnabled()) {
-            enabled = true;
+        super.enable();
 
-            boardListener = new BoardListener(playerScoreboards);
-            Bukkit.getPluginManager().registerEvents(boardListener, plugin);
-            return;
-        }
-
-        throw new IllegalArgumentException("Сервис уже включён!");
+        boardListener = new BoardListener(playerScoreboards);
+        Bukkit.getPluginManager().registerEvents(boardListener, plugin);
     }
 
     @Override
     public void disable() {
-        if (isEnabled()) {
-            enabled = false;
-            playerScoreboards.forEach((s, componentBaseBoard) -> removeBoardIfNotNull(componentBaseBoard));
-            playerScoreboards.clear();
+        super.disable();
 
-            HandlerList.unregisterAll(boardListener);
-            return;
-        }
+        playerScoreboards.forEach((s, componentBaseBoard) -> removeBoardIfNotNull(componentBaseBoard));
+        playerScoreboards.clear();
 
-        throw new IllegalArgumentException("Сервис уже выключен!");
+        HandlerList.unregisterAll(boardListener);
     }
 
     private void removeBoardIfNotNull(BaseBoard<Component> fastBoard) {
