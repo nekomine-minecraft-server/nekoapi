@@ -5,17 +5,22 @@ import net.nekomine.common.service.BaseServerService;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public class BaseServerServiceImpl<Model extends BaseModel<Key>, Key> implements BaseServerService<Model, Key> {
-    protected final RMap<Key, Model> roleMap;
+    protected final RMap<Key, Model> serverMap;
 
     public BaseServerServiceImpl(RedissonClient redissonClient, String mapName) {
-        this.roleMap = redissonClient.getMap(mapName);
+        this.serverMap = redissonClient.getMap(mapName);
     }
 
     public Optional<Model> get(Key key) {
-        return Optional.ofNullable(roleMap.get(key));
+        return Optional.ofNullable(serverMap.get(key));
+    }
+
+    public Collection<Model> findAll() {
+        return serverMap.values();
     }
 
 }

@@ -54,7 +54,7 @@ public final class SpigotApiPlugin extends JavaPlugin {
 
         registerCommand(commandService);
 
-        stateService.addState(new HubState(this, boardService));
+        stateService.addState(new HubState(this, boardService, velocityServerService));
         stateService.nextState();
     }
 

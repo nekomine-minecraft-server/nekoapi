@@ -41,7 +41,7 @@ public class VelocityServerServiceImpl extends VelocityServerService implements 
                                 .stream()
                                 .map(Player::getUsername)
                                 .toList());
-                        roleMap.put(velocityServer.getKey(), velocityServer);
+                        serverMap.put(velocityServer.getKey(), velocityServer);
                     })
                     .repeat(20L, TimeUnit.SECONDS)
                     .schedule();

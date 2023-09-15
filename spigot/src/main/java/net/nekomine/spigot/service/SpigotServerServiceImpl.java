@@ -45,7 +45,7 @@ public class SpigotServerServiceImpl extends SpigotServerService implements Serv
                     spigotServer.setWaitSpectators(currentState.waitSpectators());
                     spigotServer.setMap(currentState.getMapName());
 
-                    roleMap.put(spigotServer.getKey(), spigotServer);
+                    serverMap.put(spigotServer.getKey(), spigotServer);
                 }
             }.runTaskTimerAsynchronously(plugin, 0L, 20L);
             return;
