@@ -2,7 +2,6 @@ package net.nekomine.spigot.board;
 
 import net.kyori.adventure.text.Component;
 import net.nekomine.spigot.functional.Updater;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -62,12 +61,15 @@ class BoardImpl implements Board {
             return;
         }
 
-        BaseBoard<Component> baseBoard = baseBoardMap.getOrDefault(player.getName(), new BaseComponentBoard(player));
+        BaseBoard<Component> baseBoard = baseBoardMap.get(player.getName());
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            baseBoard.updateTitle(title);
-            baseBoard.updateLines(lineMap.values());
-        });
+        if (baseBoard == null) {
+            baseBoard = new BaseComponentBoard(player);
+            baseBoardMap.put(player.getName(), baseBoard);
+        }
+
+        baseBoard.updateTitle(title);
+        baseBoard.updateLines(lineMap.values());
     }
 
     @Override

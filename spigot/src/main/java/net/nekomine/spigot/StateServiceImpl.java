@@ -12,6 +12,7 @@ import java.util.Queue;
 class StateServiceImpl extends BaseService implements StateService {
     private final Queue<State> stateQueue = new ArrayDeque<>();
     private State currentState;
+    private boolean isFirst = true;
 
     @Override
     public State getCurrentState() {
@@ -31,7 +32,11 @@ class StateServiceImpl extends BaseService implements StateService {
             throw new StateException("Старое состояние не найдено!");
         }
 
-        oldState.end();
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            oldState.end();
+        }
 
         State newState = stateQueue.poll();
 

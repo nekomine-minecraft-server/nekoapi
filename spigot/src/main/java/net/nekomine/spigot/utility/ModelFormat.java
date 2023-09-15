@@ -13,13 +13,14 @@ import java.util.Map;
 @UtilityClass
 public class ModelFormat {
 
-    public List<String> modelToListString(BaseModel<String> dto) {
+    public List<String> modelToListString(BaseModel<String> model) {
         List<String> dtoList = new ArrayList<>();
 
-        dtoList.add("Информация о §c§l" + dto.getKey() + "§f:");
+        String className = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, model.getClass().getSimpleName()) + "_MODEL";
+        dtoList.add("Информация о " + className + " §c§l" + model.getKey() + " - §f:");
 
-        Map<String, String> dtoMap = convertToMap(dto);
-        dtoMap.forEach((key, value) -> dtoList.add(" §c▪ §f" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key) + " - §7" + value));
+        Map<String, String> dtoMap = convertToMap(model);
+        dtoMap.forEach((key, value) -> dtoList.add(" §c▪ §f" + className + "_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key) + " - §7" + value));
 
         return dtoList;
     }

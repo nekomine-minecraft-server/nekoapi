@@ -30,19 +30,19 @@ public class GameUserService extends BaseService implements GamerService, Specta
     public void enable() {
         super.enable();
 
+        spectatorTasks = new SpectatorTasks(this);
         gamerUserListener = new GamerUserListener(this, stateService, gameUserMap);
         spectatorListener = new SpectatorListener(this, spectatorTasks, stateService);
 
         Bukkit.getPluginManager().registerEvents(gamerUserListener, plugin);
         Bukkit.getPluginManager().registerEvents(spectatorListener, plugin);
 
-        spectatorTasks = new SpectatorTasks(this);
         spectatorTasks.runTaskTimerAsynchronously(plugin, 15L, 15L);
     }
 
     @Override
     public void disable() {
-        super.enable();
+        super.disable();
 
         HandlerList.unregisterAll(gamerUserListener);
         HandlerList.unregisterAll(spectatorListener);

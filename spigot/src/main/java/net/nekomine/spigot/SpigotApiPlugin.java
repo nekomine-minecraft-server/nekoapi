@@ -11,12 +11,11 @@ import net.nekomine.spigot.command.CommandServiceImpl;
 import net.nekomine.spigot.command.server.ServerStateCommandExecutor;
 import net.nekomine.spigot.gameuser.GameUser;
 import net.nekomine.spigot.gameuser.GameUserService;
+import net.nekomine.spigot.hub.HubState;
 import net.nekomine.spigot.npc.NpcService;
 import net.nekomine.spigot.npc.NpcServiceImpl;
 import net.nekomine.spigot.service.SpigotServerServiceImpl;
 import net.nekomine.spigot.state.StateService;
-import net.nekomine.spigot.state.unknown.UnknownState;
-import net.nekomine.spigot.tag.TagServiceImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,22 +42,20 @@ public final class SpigotApiPlugin extends JavaPlugin {
 
         RedissonClient redissonClient = registerService(RedissonClient.class, new EnvRedisFactory().create());
         BoardServiceImpl boardService = registerService(BoardServiceImpl.class, new BoardServiceImpl(this));
-        TagServiceImpl tagService = registerService(TagServiceImpl.class, new TagServiceImpl(this));
+        //TagServiceImpl tagService = registerService(TagServiceImpl.class, new TagServiceImpl(this));
         NpcService npcService = registerService(NpcServiceImpl.class, new NpcServiceImpl(this));
         CommandService commandService = registerService(CommandService.class, new CommandServiceImpl());
-
         StateService stateService = registerService(StateService.class, new StateServiceImpl());
-        stateService.addState(new UnknownState());
-        stateService.nextState();
-
         registerService(GameUserService.class, new GameUserService(stateService, this, gameUserMap));
-
         SpigotServerService spigotServerService = registerService(SpigotServerService.class, new SpigotServerServiceImpl(redissonClient, stateService, spigotServer, this));
         VelocityServerService velocityServerService = registerService(VelocityServerService.class, new VelocityServerService(redissonClient));
 
         services.values().forEach(Service::enable);
 
         registerCommand(commandService);
+
+        stateService.addState(new HubState(this, boardService));
+        stateService.nextState();
     }
 
     private void registerCommand(CommandService commandService) {
@@ -82,7 +79,11 @@ public final class SpigotApiPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        services.values().forEach(Service::disable);
+        services.values().forEach(service -> {
+            System.out.println(service.getClass());
+
+            service.disable();
+        });
     }
 
     /**
