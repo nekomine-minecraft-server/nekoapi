@@ -18,7 +18,7 @@ public class VelocityServer implements Server {
     private int maxPlayers;
 
     @Override
-    public String getKey() {
+    public String getId() {
         return name.toLowerCase();
     }
 

@@ -14,7 +14,7 @@ public class Role implements BaseModel<String> {
     private int level;
 
     @Override
-    public String getKey() {
+    public String getId() {
         return roleName.toLowerCase();
     }
 }

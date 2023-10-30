@@ -24,7 +24,7 @@ public interface PlayerCommandExecutor {
         return null;
     }
 
-    default List<String> getAliases(){
+    default List<String> getAliases() {
         return Collections.emptyList();
     }
 

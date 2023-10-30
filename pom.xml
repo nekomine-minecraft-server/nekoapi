@@ -12,6 +12,9 @@
         <module>common</module>
         <module>spigot</module>
         <module>velocity</module>
+        <module>common-implementation</module>
+        <module>spigot-implementation</module>
+        <module>velocity-implementation</module>
     </modules>
 
     <properties>
@@ -27,4 +30,27 @@
             <url>https://maven.pkg.github.com/nekomine-minecraft-server/nekoapi</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>citizens-repo</id>
+            <url>https://maven.citizensnpcs.co/repo</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens-main</artifactId>
+            <version>2.0.30-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 </project>

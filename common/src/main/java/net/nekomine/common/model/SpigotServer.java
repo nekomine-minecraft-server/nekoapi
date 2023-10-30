@@ -23,7 +23,7 @@ public class SpigotServer implements Server {
     private String map;
 
     @Override
-    public String getKey() {
+    public String getId() {
         return name.toLowerCase();
     }
 

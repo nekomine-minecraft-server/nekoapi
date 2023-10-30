@@ -23,7 +23,7 @@ public class User implements BaseModel<String> {
     private List<Role> roles = new ArrayList<>();
 
     @Override
-    public String getKey() {
+    public String getId() {
         return userName.toLowerCase();
     }
 }

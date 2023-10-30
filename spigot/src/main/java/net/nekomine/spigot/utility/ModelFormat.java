@@ -17,7 +17,7 @@ public class ModelFormat {
         List<String> dtoList = new ArrayList<>();
 
         String className = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, model.getClass().getSimpleName()) + "_MODEL";
-        dtoList.add("Информация о " + className + " §c§l" + model.getKey() + " - §f:");
+        dtoList.add("Информация о " + className + " §c§l" + model.getId() + " - §f:");
 
         Map<String, String> dtoMap = convertToMap(model);
         dtoMap.forEach((key, value) -> dtoList.add(" §c▪ §f" + className + "_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key) + " - §7" + value));
